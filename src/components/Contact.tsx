@@ -17,12 +17,11 @@ export function Contact() {
     setErrorMessage('');
 
     try {
-      await emailjs.send(
-        import.meta.env.EMAILJS_SERVICE_ID,
-        import.meta.env.EMAILJS_TEMPLATE_ID,
-        formData,
-        import.meta.env.EMAILJS_PUBLIC_KEY
-      );
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/send-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
