@@ -53,7 +53,7 @@ export function Hero() {
         </div>
         <div className="flex-1 max-w-md">
           <img
-            src="/Portfolio/assets/Profile.jpg"
+            src="/assets/Profile.jpg"
             alt="Profile"
             className="w-full h-auto rounded-full shadow-2xl"
           />
