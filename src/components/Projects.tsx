@@ -5,7 +5,7 @@ const projects = [
   {
     title: 'Brewed Awakening',
     description: 'Brewed Awakening is a sleek and modern coffee shop website built using HTML, CSS, and JavaScript. It features an intuitive UI, showcasing menu items, promotions, and seamless navigation for an enhanced user experience.',
-    image: '/Portfolio/assets/brewed-awakening.png',
+    image: '/assets/brewed-awakening.png',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     github: 'https://github.com/Arun-S-1505/InnomaticsAssignment2.git',
     live: 'https://arun-s-1505.github.io/InnomaticsAssignment2/',
@@ -13,7 +13,7 @@ const projects = [
   {
     title: 'E-Commerce Website',
     description: 'ShopEasy is a dynamic and user-friendly e-commerce website built using HTML, CSS, and JavaScript. It offers a seamless shopping experience with an intuitive UI, product listings, and smooth navigation.',
-    image: '/Portfolio/assets/ShopEasy.png',
+    image: '/assets/ShopEasy.png',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     github: 'https://github.com/Arun-S-1505/InnomaticsAssignment4.git',
     live: 'https://arun-s-1505.github.io/InnomaticsAssignment4/',
@@ -21,7 +21,7 @@ const projects = [
   {
     title: 'Memory Match Game',
     description: 'Memory Match Game is an interactive and engaging web-based game built using HTML, CSS, and JavaScript. It challenges players to test their memory skills with a fun and visually appealing card-matching experience.',
-    image: '/Portfolio/assets/MemoryMatch.png',
+    image: '/assets/MemoryMatch.png',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     github: 'https://github.com/Arun-S-1505/InnomaticsProject2.git',
     live: 'https://arun-s-1505.github.io/InnomaticsProject2/',
