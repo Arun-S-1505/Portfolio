@@ -2,18 +2,19 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { body, validationResult } from 'express-validator';
-import emailjs from '@emailjs/nodejs'; // Use EmailJS directly
+import emailjs from '@emailjs/nodejs';
 
-dotenv.config();
-
-const app = express();
-const PORT = process.env.PORT || 3000;
+// Load environment variables
+dotenv.config({ path: './.env' });
 
 // Log environment variables for debugging
 console.log("🔧 Loaded Environment Variables:");
 console.log("📨 EMAILJS_SERVICE_ID:", process.env.EMAILJS_SERVICE_ID || "❌ MISSING");
 console.log("📨 EMAILJS_TEMPLATE_ID:", process.env.EMAILJS_TEMPLATE_ID || "❌ MISSING");
 console.log("📨 EMAILJS_PUBLIC_KEY:", process.env.EMAILJS_PUBLIC_KEY || "❌ MISSING");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
