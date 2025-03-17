@@ -1,20 +1,15 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { body, validationResult } from 'express-validator';
-import emailjs from '@emailjs/nodejs';
-
-// Load environment variables
-dotenv.config({ path: './.env' });
+import emailjs from '@emailjs/nodejs'; // Use EmailJS directly
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Log environment variables for debugging
-console.log("🔧 Loaded Environment Variables:");
-console.log("📨 EMAILJS_SERVICE_ID:", process.env.EMAILJS_SERVICE_ID || "❌ MISSING");
-console.log("📨 EMAILJS_TEMPLATE_ID:", process.env.EMAILJS_TEMPLATE_ID || "❌ MISSING");
-console.log("📨 EMAILJS_PUBLIC_KEY:", process.env.EMAILJS_PUBLIC_KEY || "❌ MISSING");
+// ✅ Hardcoded EmailJS API Keys
+const EMAILJS_SERVICE_ID = "service_jtf39xn";
+const EMAILJS_TEMPLATE_ID = "template_43hbu3e";
+const EMAILJS_PUBLIC_KEY = "hAcedc5Vy9DMuF_jC";
 
 // Middleware
 app.use(cors());
@@ -68,7 +63,7 @@ app.delete('/api/projects/:id', (req, res) => {
   res.status(204).send();
 });
 
-// ✅ Secure EmailJS Integration
+// ✅ Email Sending Endpoint
 app.post(
   '/api/send-email',
   [
@@ -84,30 +79,22 @@ app.post(
 
     const { name, email, message } = req.body;
 
-    // Check if environment variables exist
-    if (!process.env.EMAILJS_SERVICE_ID || !process.env.EMAILJS_TEMPLATE_ID || !process.env.EMAILJS_PUBLIC_KEY) {
-      return res.status(500).json({
-        success: false,
-        message: "Missing required EmailJS environment variables. Please check your server configuration.",
-      });
-    }
-
     try {
       console.log("📨 Sending Email with:", {
-        serviceID: process.env.EMAILJS_SERVICE_ID,
-        templateID: process.env.EMAILJS_TEMPLATE_ID,
-        publicKey: process.env.EMAILJS_PUBLIC_KEY, // Log to check
+        serviceID: EMAILJS_SERVICE_ID,
+        templateID: EMAILJS_TEMPLATE_ID,
+        publicKey: EMAILJS_PUBLIC_KEY, // Log to check
       });
 
       const response = await emailjs.send(
-        process.env.EMAILJS_SERVICE_ID,
-        process.env.EMAILJS_TEMPLATE_ID,
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
         {
           from_name: name,
           from_email: email,
           message: message
         },
-        process.env.EMAILJS_PUBLIC_KEY
+        EMAILJS_PUBLIC_KEY
       );
 
       console.log("📨 Email Sent Successfully:", response);
