@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { body, validationResult } from 'express-validator';
+import emailjs from '@emailjs/nodejs'; // Use EmailJS directly
 
 dotenv.config();
 
@@ -25,11 +26,12 @@ let projects = [
   }
 ];
 
-// Projects routes
+// 📌 GET all projects
 app.get('/api/projects', (req, res) => {
   res.json(projects);
 });
 
+// 📌 POST a new project
 app.post('/api/projects', (req, res) => {
   const newProject = {
     id: Date.now().toString(),
@@ -39,6 +41,7 @@ app.post('/api/projects', (req, res) => {
   res.status(201).json(newProject);
 });
 
+// 📌 UPDATE an existing project
 app.put('/api/projects/:id', (req, res) => {
   const { id } = req.params;
   const index = projects.findIndex(p => p.id === id);
@@ -51,18 +54,56 @@ app.put('/api/projects/:id', (req, res) => {
   res.json(projects[index]);
 });
 
+// 📌 DELETE a project
 app.delete('/api/projects/:id', (req, res) => {
   const { id } = req.params;
   projects = projects.filter(p => p.id !== id);
   res.status(204).send();
 });
 
-// Error handling middleware
+// ✅ Secure EmailJS Integration
+app.post(
+  '/api/send-email',
+  [
+    body('name').notEmpty().withMessage('Name is required'),
+    body('email').isEmail().withMessage('Valid email is required'),
+    body('message').notEmpty().withMessage('Message is required')
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, email, message } = req.body;
+
+    try {
+      const response = await emailjs.send(
+        process.env.EMAILJS_SERVICE_ID,
+        process.env.EMAILJS_TEMPLATE_ID,
+        {
+          from_name: name,
+          from_email: email,
+          message: message
+        },
+        process.env.EMAILJS_PUBLIC_KEY
+      );
+
+      res.json({ success: true, message: 'Email sent successfully', response });
+    } catch (error) {
+      console.error('❌ EmailJS error:', error);
+      res.status(500).json({ success: false, message: 'Failed to send email' });
+    }
+  }
+);
+
+// 🌟 Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
+// Start Server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
