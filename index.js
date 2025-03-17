@@ -9,11 +9,17 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Log environment variables for debugging
+console.log("🔧 Loaded Environment Variables:");
+console.log("📨 EMAILJS_SERVICE_ID:", process.env.EMAILJS_SERVICE_ID || "❌ MISSING");
+console.log("📨 EMAILJS_TEMPLATE_ID:", process.env.EMAILJS_TEMPLATE_ID || "❌ MISSING");
+console.log("📨 EMAILJS_PUBLIC_KEY:", process.env.EMAILJS_PUBLIC_KEY || "❌ MISSING");
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Projects data (in-memory storage for demo)
+// 📌 Sample Project Data (For Demo)
 let projects = [
   {
     id: '1',
@@ -77,6 +83,14 @@ app.post(
 
     const { name, email, message } = req.body;
 
+    // Check if environment variables exist
+    if (!process.env.EMAILJS_SERVICE_ID || !process.env.EMAILJS_TEMPLATE_ID || !process.env.EMAILJS_PUBLIC_KEY) {
+      return res.status(500).json({
+        success: false,
+        message: "Missing required EmailJS environment variables. Please check your server configuration.",
+      });
+    }
+
     try {
       const response = await emailjs.send(
         process.env.EMAILJS_SERVICE_ID,
@@ -89,17 +103,24 @@ app.post(
         process.env.EMAILJS_PUBLIC_KEY
       );
 
-      res.json({ success: true, message: 'Email sent successfully', response });
+      console.log("📨 EmailJS Response:", response);
+      res.json({ success: true, message: 'Email sent successfully' });
+
     } catch (error) {
-      console.error('❌ EmailJS error:', error);
-      res.status(500).json({ success: false, message: 'Failed to send email' });
+      console.error('❌ EmailJS Error:', error);
+
+      res.status(500).json({
+        success: false,
+        message: 'Failed to send email. Check server logs for more details.',
+        error: error.message,
+      });
     }
   }
 );
 
 // 🌟 Global Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error("❌ Global Error:", err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
