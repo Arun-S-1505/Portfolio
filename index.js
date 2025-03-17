@@ -7,14 +7,14 @@ import emailjs from '@emailjs/nodejs';
 // Load environment variables
 dotenv.config({ path: './.env' });
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
 // Log environment variables for debugging
 console.log("🔧 Loaded Environment Variables:");
 console.log("📨 EMAILJS_SERVICE_ID:", process.env.EMAILJS_SERVICE_ID || "❌ MISSING");
 console.log("📨 EMAILJS_TEMPLATE_ID:", process.env.EMAILJS_TEMPLATE_ID || "❌ MISSING");
 console.log("📨 EMAILJS_PUBLIC_KEY:", process.env.EMAILJS_PUBLIC_KEY || "❌ MISSING");
-
-const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -93,6 +93,12 @@ app.post(
     }
 
     try {
+      console.log("📨 Sending Email with:", {
+        serviceID: process.env.EMAILJS_SERVICE_ID,
+        templateID: process.env.EMAILJS_TEMPLATE_ID,
+        publicKey: process.env.EMAILJS_PUBLIC_KEY, // Log to check
+      });
+
       const response = await emailjs.send(
         process.env.EMAILJS_SERVICE_ID,
         process.env.EMAILJS_TEMPLATE_ID,
@@ -104,16 +110,14 @@ app.post(
         process.env.EMAILJS_PUBLIC_KEY
       );
 
-      console.log("📨 EmailJS Response:", response);
+      console.log("📨 Email Sent Successfully:", response);
       res.json({ success: true, message: 'Email sent successfully' });
-
     } catch (error) {
       console.error('❌ EmailJS Error:', error);
-
       res.status(500).json({
         success: false,
-        message: 'Failed to send email. Check server logs for more details.',
-        error: error.message,
+        message: 'Failed to send email.',
+        error: error.message
       });
     }
   }
